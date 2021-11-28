@@ -47,6 +47,15 @@ def entryCounter(fileList):
 
     return entryDict
 
+def highestCount(countList):
+    resultDict = {}
+    for item in countList:
+        counterDict = countsDict[item]
+        counterList = []
+        for key, value in counterDict.items():
+           counterList.append([value, key])
+        counterList.sort() 
+
 # Main
 def main():
     fileName = './blue-midterm-log.txt'
@@ -54,6 +63,8 @@ def main():
         fileList = cleanFile(file)
     
     countsDict = entryCounter(fileList)
+
+    srcIpCount = highestCount(['ipSrc'])
 
 # Dunder check
 if __name__ == "__main__":
