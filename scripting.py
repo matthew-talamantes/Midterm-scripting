@@ -47,14 +47,42 @@ def entryCounter(fileList):
 
     return entryDict
 
-def highestCount(countList):
+def highestCount(countList, countsDict):
     resultDict = {}
-    for item in countList:
-        counterDict = countsDict[item]
+    for searchTerm in countList:
+        counterDict = countsDict[searchTerm]
         counterList = []
         for key, value in counterDict.items():
            counterList.append([value, key])
-        counterList.sort() 
+        
+        for item in counterList:
+            if item[1] in resultDict:
+                resultDict[item[1]] += item[0]
+            else:
+                resultDict[item[1]] = item[0]
+    
+    resultList = []
+    for key, value in resultDict.items():
+        resultList.append([value, key])
+    
+    resultList.sort(reverse=True)
+
+    return [resultList[0][1], resultList[0][0]]
+
+def FTPCount(fileList):
+    resultDict = {}
+    for item in fileList:
+        if item[5] == '21':
+            if item[2] in resultDict:
+                resultDict[item[2]] += 1
+            else:
+                resultDict[item[2]] = 1
+            
+    resultList = []
+    for key, value in resultDict.items():
+        resultList.append([value, key])
+    resultList.sort(reverse=True)
+    return [resultList[0][1], resultList[0][0]]
 
 # Main
 def main():
@@ -63,8 +91,15 @@ def main():
         fileList = cleanFile(file)
     
     countsDict = entryCounter(fileList)
+    ftpCount = FTPCount(fileList)
 
-    srcIpCount = highestCount(['ipSrc'])
+    srcIpCount = highestCount(['ipSrc'], countsDict)
+    print(srcIpCount)
+    ipCount = highestCount(['ipSrc', 'ipDst'], countsDict)
+    print(ipCount)
+
+    print(ftpCount)
+
 
 # Dunder check
 if __name__ == "__main__":
